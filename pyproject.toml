@@ -1,0 +1,13 @@
+[project]
+name = "reversible"
+authors = [
+    {name = "Sam McCallum", email = "sm2942@bath.ac.uk"}
+]
+version = "0.0.1"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = ["reversible/*"]
