@@ -1,4 +1,3 @@
-import math
 import time
 
 import diffrax as dfx
@@ -8,34 +7,22 @@ import jax.numpy as jnp
 import matplotlib.pyplot as plt
 import optax
 
-from reversible import MemoryTracker
+from reversible import SIR, MemoryTracker, calculate_checkpoints
 
 jax.config.update("jax_enable_x64", True)
-
-
-def calculate_checkpoints(n_steps):
-    return math.floor(-1.5 + math.sqrt(2 * n_steps + 0.25)) + 1
-
-
-def vector_field(t, y, args):
-    beta, gamma = args
-    S, I, R = y
-    dyS = -beta * I * S
-    dyI = beta * I * S - gamma * I
-    dyR = gamma * I
-    return (dyS, dyI, dyR)
 
 
 def solve(args):
     solver = dfx.Tsit5()
     saveat = dfx.SaveAt(t1=True)
-    term = dfx.ODETerm(vector_field)
+    term = dfx.ODETerm(SIR)
     y0 = (1.0, 0.1, 0.0)
     t0 = 0
     t1 = 2
-    dt0 = 0.001
+    dt0 = 0.01
     n_steps = int((t1 - t0) / dt0)
     # n_checkpoints = calculate_checkpoints(n_steps)
+    n_checkpoints = 25
     sol = dfx.diffeqsolve(
         term,
         solver,
@@ -45,8 +32,8 @@ def solve(args):
         y0=y0,
         args=args,
         saveat=saveat,
-        # adjoint=dfx.RecursiveCheckpointAdjoint(n_checkpoints),
-        adjoint=dfx.ReversibleAdjoint(),
+        adjoint=dfx.RecursiveCheckpointAdjoint(n_checkpoints),
+        # adjoint=dfx.ReversibleAdjoint(),
     )
     ts = sol.ts
     S = sol.ys[0][:n_steps]
