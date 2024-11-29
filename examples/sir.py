@@ -19,10 +19,10 @@ def solve(args):
     y0 = (1.0, 0.1, 0.0)
     t0 = 0
     t1 = 2
-    dt0 = 0.01
+    dt0 = 0.001
     n_steps = int((t1 - t0) / dt0)
-    # n_checkpoints = calculate_checkpoints(n_steps)
-    n_checkpoints = 25
+    n_checkpoints = calculate_checkpoints(n_steps)
+    # n_checkpoints = 25
     sol = dfx.diffeqsolve(
         term,
         solver,
@@ -93,7 +93,6 @@ if __name__ == "__main__":
     steps = 10
     for step in range(steps):
         loss, args, opt_state = make_step(args, data, optim, opt_state)
-        print(f"Step: {step:.2f}, loss: {loss:.2f}")
     toc = time.time()
     mem_usage = mem.end()
     print(f"Runtime: {toc - tic}")
