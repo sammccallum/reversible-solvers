@@ -1,9 +1,0 @@
-# 200 time-steps
-ReversibleAdjoint(l=0.999), runtime: 414.4889199733734, loss: 0.11
-RecursiveCheckpointAdjoint(checkpoints=2), runtime: 3323.4633333683014, loss: 0.11
-RecursiveCheckpointAdjoint(checkpoints=4), runtime: 702.1262714862823, loss: 0.11
-RecursiveCheckpointAdjoint(checkpoints=8), runtime: 556.5056593418121, loss: 0.11
-RecursiveCheckpointAdjoint(checkpoints=16), runtime: 473.92600178718567, loss: 0.11
-RecursiveCheckpointAdjoint(checkpoints=19), runtime: 348.5178265571594, loss: 0.11
-# 1000 time-steps
-ReversibleAdjoint(l=0.999), runtime: 1017.1778719425201, loss: 0.00099785
