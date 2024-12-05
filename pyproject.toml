@@ -11,3 +11,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build]
 include = ["reversible/*"]
+
+[tool.ruff.isort]
+combine-as-imports = true

@@ -1,0 +1,1 @@
+ReversibleAdjoint(l=0.999), runtime: 980.0837211608887, loss: 0.00244656
