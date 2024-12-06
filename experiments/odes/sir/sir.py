@@ -20,6 +20,7 @@ if __name__ == "__main__":
     args = (jnp.asarray(1.5), jnp.asarray(0.2))
     vf = VectorField(y_dim=3, hidden_size=10, key=jr.PRNGKey(0))
     adjoint = dfx.RecursiveCheckpointAdjoint(checkpoints)
-    _, data = solve(SIR, adjoint, args)
+    y0 = jnp.array([1.0, 0.1, 0.0])
+    _, data = solve(SIR, y0, adjoint, args)
 
-    train(vf, data, adjoint, args=None, ode_model_name="sir", steps=1000)
+    train(vf, y0, data, adjoint, args=None, ode_model_name="sir", steps=1000)
