@@ -1,0 +1,7 @@
+ReversibleAdjoint(l=0.999), runtime: 933.6302545070648, test accuracy: 0.71035600
+RecursiveCheckpointAdjoint(checkpoints=2), runtime: 2225.4782495498657, test accuracy: 0.71197414
+RecursiveCheckpointAdjoint(checkpoints=4), runtime: 770.9852986335754, test accuracy: 0.71197414
+RecursiveCheckpointAdjoint(checkpoints=8), runtime: 667.1421706676483, test accuracy: 0.71197414
+RecursiveCheckpointAdjoint(checkpoints=16), runtime: 501.0195791721344, test accuracy: 0.71197414
+RecursiveCheckpointAdjoint(checkpoints=32), runtime: 492.30461740493774, test accuracy: 0.71197414
+RecursiveCheckpointAdjoint(checkpoints=64), runtime: 456.92472290992737, test accuracy: 0.71197414

@@ -16,7 +16,7 @@ def load_data(permutation_key, split):
     X = np.load("data/character_trajectories.npy")
     y = np.load("data/labels.npy")
     dataset_size, ts_length, _ = X.shape
-    ts = np.broadcast_to(np.linspace(0, 5, num=ts_length), (dataset_size, ts_length))
+    ts = np.broadcast_to(np.linspace(0, 1, num=ts_length), (dataset_size, ts_length))
     Xs = np.concatenate([ts[:, :, None], X], axis=-1)
 
     Xs = jnp.array(Xs)
@@ -128,16 +128,21 @@ def make_step(model, xs, ys, optim, opt_state):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoints", required=True)
+    parser.add_argument("--adjoint", required=True)
     script_args = parser.parse_args()
     checkpoints = int(script_args.checkpoints)
+    adjoint = script_args.adjoint
 
     key = jr.PRNGKey(100)
     model_key, load_key, dataloader_key = jr.split(key, 3)
     batch_size = 32
     X_train, X_test, y_train, y_test = load_data(load_key, split=70 * batch_size)
 
-    adjoint = dfx.ReversibleAdjoint()
-    # adjoint = dfx.RecursiveCheckpointAdjoint(checkpoints)
+    if adjoint == "reversible":
+        adjoint = dfx.ReversibleAdjoint()
+    elif adjoint == "recursive":
+        adjoint = dfx.RecursiveCheckpointAdjoint(checkpoints)
+
     model = NeuralCDE(
         data_size=4,
         hidden_size=32,
