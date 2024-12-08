@@ -16,7 +16,6 @@ if __name__ == "__main__":
     script_args = parser.parse_args()
     checkpoints = int(script_args.checkpoints)
 
-    ode = "sir"
     args = (jnp.asarray(1.5), jnp.asarray(0.2))
     vf = VectorField(y_dim=3, hidden_size=10, key=jr.PRNGKey(0))
     adjoint = dfx.RecursiveCheckpointAdjoint(checkpoints)
