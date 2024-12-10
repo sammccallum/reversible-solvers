@@ -139,6 +139,7 @@ class NeuralSDE(eqx.Module):
             y0,
             saveat=saveat,
             max_steps=ts.shape[0] - 1,
+            adjoint=diffrax.ReversibleAdjoint(),
         )
         return jax.vmap(self.readout)(sol.ys)
 
@@ -187,6 +188,7 @@ class NeuralCDE(eqx.Module):
             y0,
             saveat=saveat,
             max_steps=ts.shape[0] - 1,
+            adjoint=diffrax.ReversibleAdjoint(),
         )
         ys = jnp.concatenate([y0[None, :], sol.ys], axis=0)
         return jax.vmap(self.readout)(sol.ys)
@@ -388,7 +390,7 @@ def main(
     print(f"Runtime: {toc-tic}")
 
     # Save generator model
-    eqx.tree_serialise_leaves("generator.eqx", generator)
+    eqx.tree_serialise_leaves("generator_reversible.eqx", generator)
 
     # Plot samples
     fig, ax = plt.subplots()
@@ -416,7 +418,7 @@ def main(
     ax.set_title(f"{num_samples} samples from both real and generated distributions.")
     fig.legend()
     fig.tight_layout()
-    fig.savefig("neural_sde.png")
+    fig.savefig("neural_sde_reversible.png")
 
 
 if __name__ == "__main__":
