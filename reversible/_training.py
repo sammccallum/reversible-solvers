@@ -8,13 +8,11 @@ import optax
 from reversible import plot_pendulum
 
 
-def solve(vf, y0, adjoint, args):
+def solve(vf, y0, t1, dt0, adjoint, args):
     solver = dfx.Tsit5()
     saveat = dfx.SaveAt(steps=True)
     term = dfx.ODETerm(vf)
     t0 = 0
-    t1 = 10
-    dt0 = 0.01
     n_steps = int((t1 - t0) / dt0)
     sol = dfx.diffeqsolve(
         term,
@@ -26,6 +24,7 @@ def solve(vf, y0, adjoint, args):
         args=args,
         saveat=saveat,
         adjoint=adjoint,
+        max_steps=n_steps,
     )
     ts = sol.ts[:n_steps]
     ys = sol.ys[:n_steps]
@@ -34,11 +33,21 @@ def solve(vf, y0, adjoint, args):
 
 
 def train(
-    vf, y0, data, adjoint, args, ode_model_name, steps=1000, lr=1e-2, weight_decay=1e-5
+    vf,
+    y0,
+    t1,
+    dt0,
+    data,
+    adjoint,
+    args,
+    ode_model_name,
+    steps=1000,
+    lr=1e-2,
+    weight_decay=1e-5,
 ):
     @eqx.filter_value_and_grad
     def grad_loss(vf):
-        _, ys = solve(vf, y0, adjoint, args)
+        _, ys = solve(vf, y0, t1, dt0, adjoint, args)
         return jnp.mean((data - ys) ** 2)
 
     @eqx.filter_jit
@@ -67,5 +76,5 @@ def train(
     with open(data_file, "a") as file:
         print(f"{adjoint}, runtime: {toc - tic}, loss: {loss:.8f}", file=file)
 
-    ts, ys_pred = solve(vf, y0, adjoint, args)
+    ts, ys_pred = solve(vf, y0, t1, dt0, adjoint, args)
     plot_pendulum(ts, ys_pred)

@@ -39,3 +39,22 @@ def pendulum(t, y, args):
     dy1 = y2
     dy2 = -(g / l) * jnp.sin(y1)
     return jnp.array([dy1, dy2])
+
+
+def white_dwarf(t, y, args):
+    t = t + 0.5
+    c = args
+    y1 = y[0]
+    y2 = y[1]
+    dy1 = y2
+    dy2 = -((y1**2 - c) ** (3 / 2)) - 2 * y2 / t
+    return jnp.array([dy1, dy2])
+
+
+def fitzhugh_nagumo(t, y, args):
+    I, a, b, tau = args
+    y1 = y[0]
+    y2 = y[1]
+    dy1 = y1 - (y1**3 / 3) - y2 + I
+    dy2 = (1 / tau) * (y1 + a - b * y2)
+    return jnp.array([dy1, dy2])
