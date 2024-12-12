@@ -20,5 +20,9 @@ if __name__ == "__main__":
     vf = VectorField(y_dim=2, hidden_size=10, key=jr.PRNGKey(0))
     adjoint = dfx.RecursiveCheckpointAdjoint(checkpoints)
     y0 = jnp.array([jnp.pi / 2, 0.0])
-    ts, data = solve(pendulum, y0, adjoint, args)
-    train(vf, y0, data, adjoint, args=None, ode_model_name="pendulum", steps=1000)
+    t1 = 10
+    dt0 = 0.01
+    ts, data = solve(pendulum, y0, t1, dt0, adjoint, args)
+    train(
+        vf, y0, t1, dt0, data, adjoint, args=None, ode_model_name="pendulum", steps=1000
+    )

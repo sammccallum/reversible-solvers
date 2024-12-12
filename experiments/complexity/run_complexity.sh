@@ -3,7 +3,8 @@
 # n=2
 # python3 complexity.py --adjoint reversible --checkpoints "$n"
 
-for n in {30..50}
+checkpoints=(2 4 8 16 32)
+for n in "${checkpoints[@]}"
 do
     python3 complexity.py --adjoint recursive --checkpoints "$n"
 done

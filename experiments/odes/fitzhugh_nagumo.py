@@ -19,8 +19,8 @@ if __name__ == "__main__":
 
     args = (0.5, 0.7, 0.8, 12.5)
     vf = VectorField(y_dim=2, hidden_size=10, key=jr.PRNGKey(0))
-    # adjoint = dfx.RecursiveCheckpointAdjoint(checkpoints)
-    adjoint = dfx.ReversibleAdjoint()
+    adjoint = dfx.RecursiveCheckpointAdjoint(checkpoints)
+    # adjoint = dfx.ReversibleAdjoint()
     y0 = jnp.array([1.0, 1.0])
     t1 = 20
     dt0 = 0.02

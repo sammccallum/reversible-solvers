@@ -1,2 +1,7 @@
-RecursiveCheckpointAdjoint(checkpoints=44), runtime: 903.3614094257355, loss: 0.02767954
 ReversibleAdjoint(l=0.999), runtime: 1050.8390758037567, loss: 0.02998749
+ReversibleAdjoint(l=0.999), runtime: 1160.572259426117, loss: 0.02998749
+ReversibleAdjoint(l=0.999), runtime: 1177.177339553833, loss: 0.02998749
+ReversibleAdjoint(l=0.999), runtime: 1176.312747478485, loss: 0.02998749
+ReversibleAdjoint(l=0.999), runtime: 1179.5757689476013, loss: 0.02998749
+ReversibleAdjoint(l=0.999), runtime: 1117.0385525226593, loss: 0.02998749
+RecursiveCheckpointAdjoint(checkpoints=44), runtime: 903.3614094257355, loss: 0.02767954
