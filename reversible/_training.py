@@ -5,7 +5,7 @@ import equinox as eqx
 import jax.numpy as jnp
 import optax
 
-from reversible import plot_pendulum
+from reversible import plot_lorenz
 
 
 def solve(vf, y0, t1, dt0, adjoint, args):
@@ -77,4 +77,4 @@ def train(
         print(f"{adjoint}, runtime: {toc - tic}, loss: {loss:.8f}", file=file)
 
     ts, ys_pred = solve(vf, y0, t1, dt0, adjoint, args)
-    plot_pendulum(ts, ys_pred)
+    plot_lorenz(ts, ys_pred)

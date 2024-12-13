@@ -24,3 +24,12 @@ def plot_pendulum(ts, ys):
 
     plt.legend()
     plt.savefig("data/pendulum_pred.png", dpi=300)
+
+
+def plot_lorenz(ts, ys):
+    plt.plot(ts, ys[:, 0], ".-", color="tab:blue", label="S")
+    plt.plot(ts, ys[:, 1], ".-", color="tab:red", label="I")
+    plt.plot(ts, ys[:, 2], ".-", color="tab:green", label="R")
+
+    plt.legend()
+    plt.savefig("lorenz_pred.png", dpi=300)
