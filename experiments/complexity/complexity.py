@@ -16,7 +16,6 @@ def linear(t, y, args):
     return alpha * y
 
 
-# Simple neural vector field
 class VectorField(eqx.Module):
     layers: list
 
