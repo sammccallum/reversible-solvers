@@ -1,1 +1,2 @@
 adjoint=RecursiveCheckpointAdjoint(checkpoints=None), time=36126.78
+adjoint=ReversibleAdjoint(l=0.999), time=43325.16

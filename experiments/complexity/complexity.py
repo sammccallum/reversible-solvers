@@ -79,7 +79,7 @@ if __name__ == "__main__":
         adjoint = dfx.ReversibleAdjoint()
 
     elif adjoint_name == "recursive":
-        adjoint = dfx.RecursiveCheckpointAdjoint(checkpoints)
+        adjoint = dfx.RecursiveCheckpointAdjoint()
 
     ts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     for t1 in ts:
