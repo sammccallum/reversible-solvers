@@ -5,11 +5,10 @@ import equinox as eqx
 import jax.numpy as jnp
 import optax
 
-from reversible import plot_SEIRS
+from reversible import plot_whitedwarf
 
 
-def solve(vf, y0, t1, dt0, adjoint, args):
-    solver = dfx.Dopri8()
+def solve(vf, y0, t1, dt0, solver, adjoint, args):
     saveat = dfx.SaveAt(steps=True)
     term = dfx.ODETerm(vf)
     t0 = 0
@@ -39,6 +38,7 @@ def train(
     dt0,
     data,
     adjoint,
+    solver,
     args,
     ode_model_name,
     steps=1000,
@@ -47,7 +47,7 @@ def train(
 ):
     @eqx.filter_value_and_grad
     def grad_loss(vf):
-        _, ys = solve(vf, y0, t1, dt0, adjoint, args)
+        _, ys = solve(vf, y0, t1, dt0, solver, adjoint, args)
         return jnp.mean((data - ys) ** 2)
 
     @eqx.filter_jit
@@ -76,5 +76,5 @@ def train(
     with open(data_file, "a") as file:
         print(f"{adjoint}, runtime: {toc - tic}, loss: {loss:.8f}", file=file)
 
-    ts, ys_pred = solve(vf, y0, t1, dt0, adjoint, args)
-    plot_SEIRS(ts, ys_pred)
+    ts, ys_pred = solve(vf, y0, t1, dt0, solver, adjoint, args)
+    plot_whitedwarf(ts, ys_pred)

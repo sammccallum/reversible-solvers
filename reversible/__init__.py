@@ -15,9 +15,9 @@ from ._odes import (
 from ._plotting import (
     plot_lorenz as plot_lorenz,
     plot_lotka_volterra as plot_lotka_volterra,
-    plot_pendulum as plot_pendulum,
     plot_SEIRS as plot_SEIRS,
     plot_SIR as plot_SIR,
+    plot_whitedwarf as plot_whitedwarf,
 )
 from ._training import solve as solve, train as train
 from .tracking.memory import MemoryTracker as MemoryTracker

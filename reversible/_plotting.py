@@ -18,12 +18,12 @@ def plot_lotka_volterra(ts, ys):
     plt.savefig("data/lotka_volterra.png", dpi=300)
 
 
-def plot_pendulum(ts, ys):
+def plot_whitedwarf(ts, ys):
     plt.plot(ts, ys[:, 0], ".-", color="tab:blue", label=r"x")
     plt.plot(ts, ys[:, 1], ".-", color="tab:red", label=r"y")
 
     plt.legend()
-    plt.savefig("data/pendulum_pred.png", dpi=300)
+    plt.savefig("data/white_dwarf.png", dpi=300)
 
 
 def plot_lorenz(ts, ys):
