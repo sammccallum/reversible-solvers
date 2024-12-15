@@ -5,11 +5,11 @@ import equinox as eqx
 import jax.numpy as jnp
 import optax
 
-from reversible import plot_lorenz
+from reversible import plot_SEIRS
 
 
 def solve(vf, y0, t1, dt0, adjoint, args):
-    solver = dfx.Tsit5()
+    solver = dfx.Dopri8()
     saveat = dfx.SaveAt(steps=True)
     term = dfx.ODETerm(vf)
     t0 = 0
@@ -77,4 +77,4 @@ def train(
         print(f"{adjoint}, runtime: {toc - tic}, loss: {loss:.8f}", file=file)
 
     ts, ys_pred = solve(vf, y0, t1, dt0, adjoint, args)
-    plot_lorenz(ts, ys_pred)
+    plot_SEIRS(ts, ys_pred)

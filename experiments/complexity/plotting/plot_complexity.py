@@ -1,7 +1,17 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-plt.rcParams["axes.prop_cycle"] = plt.cycler(color=plt.cm.tab10.colors)
+plt.rcParams.update(
+    {
+        "text.usetex": True,
+        "font.family": "Computer Modern Roman",
+        "font.size": 18,
+        "text.latex.preamble": r"\usepackage{lmodern, amsmath, amssymb, amsfonts}",
+        "legend.fontsize": 16,
+        "svg.fonttype": "none",
+        "axes.prop_cycle": plt.cycler(color=plt.cm.tab10.colors),
+    }
+)
 
 
 def get_checkpoints_and_runtimes(data):
@@ -69,21 +79,56 @@ if __name__ == "__main__":
         runtimes_rec[idx] = mean_rec
         runtimes_rev[idx] = mean_rev
 
-    plt.plot(steps, runtimes_rec, marker=".", alpha=0.8)
-    plt.plot(steps, runtimes_rev, color="black", marker=".", linestyle="--")
+    fig, ax = plt.subplots(1, 1, figsize=(8, 5))
+    ax.plot(steps, runtimes_rev, color="black", marker=".", linestyle="--")
+    ax.plot(steps, runtimes_rec, marker=".")
 
-    plt.ylabel("Runtime (s)")
-    plt.xlabel("Computation length (n)")
-    plt.yscale("log")
-    plt.legend(
-        labels=[
-            r"Checkpointed $n=2$",
-            r"Checkpointed $n=4$",
-            r"Checkpointed $n=8$",
-            r"Optimal checkpointing",
-            "Reversible",
-        ],
-        loc="upper left",
+    ax.text(
+        steps[-1] + 15,
+        runtimes_rev[-1] + 0.05,
+        r"Reversible",
+        color="black",
+        va="center",
     )
+    ax.text(
+        steps[-1] + 15, runtimes_rec[-1, 0], r"$c=2$", color="tab:blue", va="center"
+    )
+    ax.text(
+        steps[-1] + 15, runtimes_rec[-1, 1], r"$c=4$", color="tab:orange", va="center"
+    )
+    ax.text(
+        steps[-1] + 15,
+        runtimes_rec[-1, 2] + 0.15,
+        r"$c=8$",
+        color="tab:green",
+        va="center",
+    )
+    ax.text(
+        steps[-1] + 15,
+        runtimes_rec[-1, 3] - 0.15,
+        r"$c\sim \sqrt{n}$",
+        color="tab:red",
+        va="center",
+    )
+
+    ax.set_ylabel("Runtime (s)")
+    ax.set_xlabel("Computation length (n)")
+    plt.yscale("log")
+    # ax.legend(
+    #     labels=[
+    #         "Reversible",
+    #         r"Recursive $n=2$",
+    #         r"Recursive $n=4$",
+    #         r"Recursive $n=8$",
+    #         r"Recursive Optimal",
+    #     ],
+    #     bbox_to_anchor=(1, 1),
+    #     loc="upper left",
+    # )
+    ax.set_xlim(steps[0], steps[-1] + 10)
+    # ax.set_xticks(steps)
+    ax.spines["top"].set_visible(False)  # Hide top spine
+    ax.spines["right"].set_visible(False)
     plt.tight_layout()
+    plt.grid(True)
     plt.savefig("plot.png", dpi=300)

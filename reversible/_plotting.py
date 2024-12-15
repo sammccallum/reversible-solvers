@@ -27,9 +27,19 @@ def plot_pendulum(ts, ys):
 
 
 def plot_lorenz(ts, ys):
-    plt.plot(ts, ys[:, 0], ".-", color="tab:blue", label="S")
-    plt.plot(ts, ys[:, 1], ".-", color="tab:red", label="I")
-    plt.plot(ts, ys[:, 2], ".-", color="tab:green", label="R")
+    plt.plot(ts, ys[:, 0], ".-", color="tab:blue", label="x")
+    plt.plot(ts, ys[:, 1], ".-", color="tab:red", label="y")
+    plt.plot(ts, ys[:, 2], ".-", color="tab:green", label="z")
 
     plt.legend()
     plt.savefig("lorenz_pred.png", dpi=300)
+
+
+def plot_SEIRS(ts, ys):
+    plt.plot(ts, ys[:, 0], ".-", color="tab:blue", label="S")
+    plt.plot(ts, ys[:, 1], ".-", color="tab:red", label="E")
+    plt.plot(ts, ys[:, 2], ".-", color="tab:green", label="I")
+    plt.plot(ts, ys[:, 4], ".-", color="tab:orange", label="R")
+
+    plt.legend()
+    plt.savefig("SEIRS.png", dpi=300)

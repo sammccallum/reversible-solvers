@@ -12,6 +12,19 @@ def SIR(t, y, args):
     return jnp.array([dyS, dyI, dyR])
 
 
+def SEIRS(t, y, args):
+    mu, beta, omega, sigma, gamma, alpha = args
+    S = y[0]
+    E = y[1]
+    I = y[2]
+    R = y[3]
+    dyS = mu - beta * I * S + omega * R - mu * S
+    dyE = beta * I * S - sigma * E - mu * E
+    dyI = sigma * E - gamma * I - (mu + alpha) * I
+    dyR = gamma * I - omega * R - mu * R
+    return jnp.array([dyS, dyE, dyI, dyR])
+
+
 def lotka_volterra(t, y, args):
     alpha, beta, gamma, delta = args
     y1 = y[0]
