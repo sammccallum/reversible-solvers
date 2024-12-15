@@ -329,7 +329,7 @@ def main(
     generator_lr=2e-5,
     discriminator_lr=1e-4,
     batch_size=1024,
-    steps=1,
+    steps=10000,
     steps_per_print=200,
     dataset_size=8192,
     seed=5678,
