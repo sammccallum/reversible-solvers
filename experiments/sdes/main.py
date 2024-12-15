@@ -1,3 +1,4 @@
+import argparse
 import time
 from typing import Union
 
@@ -86,6 +87,7 @@ class NeuralSDE(eqx.Module):
     readout: eqx.nn.Linear
     initial_noise_size: int
     noise_size: int
+    adjoint: diffrax.AbstractAdjoint
 
     def __init__(
         self,
@@ -95,6 +97,7 @@ class NeuralSDE(eqx.Module):
         hidden_size,
         width_size,
         depth,
+        adjoint,
         *,
         key,
         **kwargs,
@@ -113,6 +116,7 @@ class NeuralSDE(eqx.Module):
 
         self.initial_noise_size = initial_noise_size
         self.noise_size = noise_size
+        self.adjoint = adjoint
 
     def __call__(self, ts, *, key):
         t0 = ts[0]
@@ -139,7 +143,7 @@ class NeuralSDE(eqx.Module):
             y0,
             saveat=saveat,
             max_steps=ts.shape[0] - 1,
-            adjoint=diffrax.ReversibleAdjoint(),
+            adjoint=diffrax.RecursiveCheckpointAdjoint(checkpoints=2),
         )
         return jax.vmap(self.readout)(sol.ys)
 
@@ -149,8 +153,11 @@ class NeuralCDE(eqx.Module):
     vf: VectorField
     cvf: ControlledVectorField
     readout: eqx.nn.Linear
+    adjoint: diffrax.AbstractAdjoint
 
-    def __init__(self, data_size, hidden_size, width_size, depth, *, key, **kwargs):
+    def __init__(
+        self, data_size, hidden_size, width_size, depth, adjoint, *, key, **kwargs
+    ):
         super().__init__(**kwargs)
         initial_key, vf_key, cvf_key, readout_key = jr.split(key, 4)
 
@@ -162,6 +169,7 @@ class NeuralCDE(eqx.Module):
             data_size, hidden_size, width_size, depth, scale=False, key=cvf_key
         )
         self.readout = eqx.nn.Linear(hidden_size, 1, key=readout_key)
+        self.adjoint = adjoint
 
     def __call__(self, ts, ys):
         ys = diffrax.linear_interpolation(
@@ -188,7 +196,7 @@ class NeuralCDE(eqx.Module):
             y0,
             saveat=saveat,
             max_steps=ts.shape[0] - 1,
-            adjoint=diffrax.ReversibleAdjoint(),
+            adjoint=diffrax.RecursiveCheckpointAdjoint(checkpoints=2),
         )
         ys = jnp.concatenate([y0[None, :], sol.ys], axis=0)
         return jax.vmap(self.readout)(sol.ys)
@@ -311,6 +319,8 @@ def make_step(
 
 
 def main(
+    adjoint,
+    filename,
     initial_noise_size=5,
     noise_size=3,
     hidden_size=16,
@@ -319,7 +329,7 @@ def main(
     generator_lr=2e-5,
     discriminator_lr=1e-4,
     batch_size=1024,
-    steps=10000,
+    steps=1,
     steps_per_print=200,
     dataset_size=8192,
     seed=5678,
@@ -346,10 +356,16 @@ def main(
         hidden_size,
         width_size,
         depth,
+        adjoint=adjoint,
         key=generator_key,
     )
     discriminator = NeuralCDE(
-        data_size, hidden_size, width_size, depth, key=discriminator_key
+        data_size,
+        hidden_size,
+        width_size,
+        depth,
+        adjoint=adjoint,
+        key=discriminator_key,
     )
 
     g_optim = optax.rmsprop(generator_lr)
@@ -387,10 +403,13 @@ def main(
                 num_batches += 1
             print(f"Step: {step}, Loss: {total_score / num_batches}")
     toc = time.time()
-    print(f"Runtime: {toc-tic}")
+
+    data_file = "runtime.txt"
+    with open(data_file, "a") as file:
+        print(f"{adjoint}, runtime: {toc - tic}", file=file)
 
     # Save generator model
-    eqx.tree_serialise_leaves("generator_reversible.eqx", generator)
+    eqx.tree_serialise_leaves(filename, generator)
 
     # Plot samples
     fig, ax = plt.subplots()
@@ -418,8 +437,23 @@ def main(
     ax.set_title(f"{num_samples} samples from both real and generated distributions.")
     fig.legend()
     fig.tight_layout()
-    fig.savefig("neural_sde_reversible.png")
+    fig.savefig(f"{filename}_plot.png")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--adjoint", required=True)
+    parser.add_argument("--checkpoints", required=True)
+    script_args = parser.parse_args()
+
+    adjoint_name = script_args.adjoint
+    checkpoints = int(script_args.checkpoints)
+
+    if adjoint_name == "reversible":
+        adjoint = diffrax.ReversibleAdjoint()
+
+    elif adjoint_name == "recursive":
+        adjoint = diffrax.RecursiveCheckpointAdjoint(checkpoints)
+
+    filename = f"{adjoint_name}_{checkpoints}.eqx"
+    main(adjoint, filename)
