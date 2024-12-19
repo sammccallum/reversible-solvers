@@ -2,6 +2,7 @@ import diffrax as dfx
 import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 
 jax.config.update("jax_enable_x64", True)
 plt.rcParams.update(
@@ -84,18 +85,36 @@ def plot_order(t1, solver, solver_name, ax, marker, color):
 if __name__ == "__main__":
     t1 = 5
     solvers = [dfx.Euler(), dfx.Midpoint(), dfx.Bosh3(), dfx.Dopri5()]
-    solver_names = ["Euler", "Midpoint", "RK3", "Dopri5"]
+    solver_names = ["Euler", "Midpoint", "Bosh3", "Dopri5"]
     markers = ["o", "^", "s", "p"]
     colors = ["tab:red", "tab:blue", "tab:orange", "tab:purple"]
-    fig, ax = plt.subplots(1, 1, figsize=(8, 5))
-    for solver, name, marker, color in zip(solvers, solver_names, markers, colors):
+    custom_handles = []
+    fig, ax = plt.subplots(1, 1, figsize=(6, 5))
+    for i in range(len(solvers)):
+        solver = solvers[i]
+        name = solver_names[i]
+        marker = markers[i]
+        color = colors[i]
         plot_order(t1, solver, name, ax, marker, color)
+
+        custom_handles.append(
+            Line2D(
+                [i],
+                [i],
+                marker=markers[i],
+                label=rf"{name}",
+                color=(0, 0, 0, 0),
+                markerfacecolor=colors[i],
+                markeredgecolor=colors[i],
+            )
+        )
     plt.loglog()
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.set_xlabel(r"Time step, $\Delta t$")
     ax.set_ylabel(r"Error, $|y_N - y(T)|$")
     plt.grid(True)
-    plt.legend(bbox_to_anchor=(1, 0.85), loc="upper left")
+    plt.legend(handles=custom_handles, handletextpad=0.2)
+    # plt.legend(bbox_to_anchor=(1, 0.85), loc="upper left")
     plt.tight_layout()
     plt.savefig("convergence.png", dpi=300)
