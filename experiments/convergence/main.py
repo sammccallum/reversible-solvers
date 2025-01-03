@@ -84,8 +84,8 @@ def plot_order(t1, solver, solver_name, ax, marker, color):
 
 if __name__ == "__main__":
     t1 = 5
-    solvers = [dfx.Euler(), dfx.Midpoint(), dfx.Bosh3(), dfx.Dopri5()]
-    solver_names = ["Euler", "Midpoint", "Bosh3", "Dopri5"]
+    solvers = [dfx.Euler(), dfx.MidpointSimple(), dfx.RK3Simple(), dfx.RK4Simple()]
+    solver_names = ["Euler", "Midpoint", "Ralston3", "RK4"]
     markers = ["o", "^", "s", "p"]
     colors = ["tab:red", "tab:blue", "tab:orange", "tab:purple"]
     custom_handles = []
@@ -117,4 +117,4 @@ if __name__ == "__main__":
     plt.legend(handles=custom_handles, handletextpad=0.2)
     # plt.legend(bbox_to_anchor=(1, 0.85), loc="upper left")
     plt.tight_layout()
-    plt.savefig("convergence.png", dpi=300)
+    plt.savefig("convergence_new.png", dpi=300)

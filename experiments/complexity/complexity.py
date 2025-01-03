@@ -36,7 +36,7 @@ class VectorField(eqx.Module):
 @eqx.filter_value_and_grad
 def grad_loss(y0__term, t1, adjoint):
     y0, term = y0__term
-    solver = dfx.Tsit5()
+    solver = dfx.MidpointSimple()
     t0 = 0
     dt0 = 0.01
     max_steps = int((t1 - t0) / dt0)
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     elif adjoint_name == "recursive":
         adjoint = dfx.RecursiveCheckpointAdjoint(checkpoints)
 
-    ts = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    ts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     for t1 in ts:
         steps = int(t1 / 0.01)
         filename = f"data/{adjoint_name}_{steps}.csv"

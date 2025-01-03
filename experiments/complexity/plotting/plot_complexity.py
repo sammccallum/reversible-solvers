@@ -85,16 +85,16 @@ if __name__ == "__main__":
     )
     ax.text(
         steps[-1] + 15,
-        runtimes_rev[-1] + 0.05,
+        runtimes_rev[-1],
         r"Reversible",
         color="black",
         va="center",
     )
 
-    markers = ["o", "^", "s", "p"]
-    colors = ["tab:red", "tab:blue", "tab:orange", "tab:purple"]
-    labels = [r"$c=2$", r"$c=4$", r"$c=8$", r"$c\sim \sqrt{n}$"]
-    text_offsets = [0, 0, 0.15, -0.15]
+    markers = ["p", "o", "^", "s"]
+    colors = ["tab:purple", "tab:red", "tab:blue", "tab:orange"]
+    labels = [r"$c\sim \sqrt{n}$", "$c=2$", r"$c=4$", r"$c=8$"]
+    text_offsets = [0, 0, 0, 0]
     for i in range(4):
         ax.plot(steps, runtimes_rec[:, i], marker=markers[i], color=colors[i])
         ax.text(
@@ -105,33 +105,12 @@ if __name__ == "__main__":
             va="center",
         )
 
-    # ax.text(
-    #     steps[-1] + 15, runtimes_rec[-1, 0], r"$c=2$", color="tab:blue", va="center"
-    # )
-    # ax.text(
-    #     steps[-1] + 15, runtimes_rec[-1, 1], r"$c=4$", color="tab:orange", va="center"
-    # )
-    # ax.text(
-    #     steps[-1] + 15,
-    #     runtimes_rec[-1, 2] + 0.15,
-    #     r"$c=8$",
-    #     color="tab:green",
-    #     va="center",
-    # )
-    # ax.text(
-    #     steps[-1] + 15,
-    #     runtimes_rec[-1, 3] - 0.15,
-    #     r"$c\sim \sqrt{n}$",
-    #     color="tab:red",
-    #     va="center",
-    # )
-
     ax.set_ylabel("Runtime (s)")
-    ax.set_xlabel("Computation length (n)")
+    ax.set_xlabel("Time steps (n)")
     plt.yscale("log")
     ax.set_xlim(steps[0], steps[-1] + 10)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     plt.tight_layout()
     plt.grid(True)
-    plt.savefig("plot.png", dpi=300)
+    plt.savefig("plot_new.png", dpi=300)
