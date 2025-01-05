@@ -130,7 +130,7 @@ class NeuralSDE(eqx.Module):
         vf = diffrax.ODETerm(self.vf)  # Drift term
         cvf = diffrax.ControlTerm(self.cvf, control)  # Diffusion term
         terms = diffrax.MultiTerm(vf, cvf)
-        solver = diffrax.MidpointSimple()
+        solver = diffrax.EulerHeun()
         y0 = self.initial(init)
 
         saveat = diffrax.SaveAt(t0=True, steps=True)
@@ -143,7 +143,7 @@ class NeuralSDE(eqx.Module):
             y0,
             saveat=saveat,
             max_steps=ts.shape[0] - 1,
-            adjoint=diffrax.RecursiveCheckpointAdjoint(checkpoints=2),
+            adjoint=self.adjoint,
         )
         return jax.vmap(self.readout)(sol.ys)
 
@@ -180,7 +180,7 @@ class NeuralCDE(eqx.Module):
         vf = diffrax.ODETerm(self.vf)
         cvf = diffrax.ControlTerm(self.cvf, control)
         terms = diffrax.MultiTerm(vf, cvf)
-        solver = diffrax.MidpointSimple()
+        solver = diffrax.EulerHeun()
         t0 = ts[0]
         t1 = ts[-1]
         dt0 = ts[1] - ts[0]
@@ -196,7 +196,7 @@ class NeuralCDE(eqx.Module):
             y0,
             saveat=saveat,
             max_steps=ts.shape[0] - 1,
-            adjoint=diffrax.RecursiveCheckpointAdjoint(checkpoints=2),
+            adjoint=self.adjoint,
         )
         ys = jnp.concatenate([y0[None, :], sol.ys], axis=0)
         return jax.vmap(self.readout)(sol.ys)
@@ -240,7 +240,7 @@ def get_data(key):
     drift = diffrax.ODETerm(drift)
     diffusion = diffrax.ControlTerm(diffusion, bm)
     terms = diffrax.MultiTerm(drift, diffusion)
-    solver = diffrax.MidpointSimple()
+    solver = diffrax.EulerHeun()
     dt0 = 0.1
 
     y0 = jr.uniform(y0_key, (1,), minval=-1, maxval=1)
