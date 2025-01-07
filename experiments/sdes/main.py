@@ -180,7 +180,7 @@ class NeuralCDE(eqx.Module):
         vf = diffrax.ODETerm(self.vf)
         cvf = diffrax.ControlTerm(self.cvf, control)
         terms = diffrax.MultiTerm(vf, cvf)
-        solver = diffrax.EulerHeun()
+        solver = diffrax.MidpointSimple()
         t0 = ts[0]
         t1 = ts[-1]
         dt0 = ts[1] - ts[0]
@@ -453,7 +453,7 @@ if __name__ == "__main__":
         adjoint = diffrax.ReversibleAdjoint()
 
     elif adjoint_name == "recursive":
-        adjoint = diffrax.RecursiveCheckpointAdjoint(checkpoints)
+        adjoint = diffrax.RecursiveCheckpointAdjoint()
 
-    filename = f"{adjoint_name}_{checkpoints}.eqx"
+    filename = f"{adjoint_name}_{checkpoints}_new.eqx"
     main(adjoint, filename)
