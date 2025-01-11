@@ -1,4 +1,5 @@
 from ._checkpointing import calculate_checkpoints as calculate_checkpoints
+from ._data import load_from_numpy as load_from_numpy
 from ._models import (
     TimeDependentVectorField as TimeDependentVectorField,
     VectorField as VectorField,

@@ -380,6 +380,7 @@ def main(
     tic = time.time()
     for step, (ts_i, ys_i) in zip(range(steps), infinite_dataloader):
         step = jnp.asarray(step)
+        tic_step = time.time()
         generator, discriminator, g_opt_state, d_opt_state = make_step(
             generator,
             discriminator,
@@ -392,6 +393,8 @@ def main(
             key,
             step,
         )
+        toc_step = time.time()
+        print(f"Time: {toc_step - tic_step}")
         if (step % steps_per_print) == 0 or step == steps - 1:
             total_score = 0
             num_batches = 0

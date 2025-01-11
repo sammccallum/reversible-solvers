@@ -5,8 +5,6 @@ import equinox as eqx
 import jax.numpy as jnp
 import optax
 
-from reversible import plot_whitedwarf
-
 
 def solve(vf, y0, t1, dt0, solver, adjoint, args):
     saveat = dfx.SaveAt(steps=True)
@@ -77,4 +75,4 @@ def train(
         print(f"{adjoint}, runtime: {toc - tic}, loss: {loss:.8f}", file=file)
 
     ts, ys_pred = solve(vf, y0, t1, dt0, solver, adjoint, args)
-    plot_whitedwarf(ts, ys_pred)
+    return ts, ys_pred
