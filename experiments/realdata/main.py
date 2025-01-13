@@ -76,7 +76,7 @@ if __name__ == "__main__":
     y0 = xs[0]
     t1 = ts[-1]
     dt0 = ts[1] - ts[0]
-    solver = dfx.RK4Simple()
+    solver = dfx.RK3Simple()
 
     ts, ys_pred = train(
         vf,
@@ -87,7 +87,7 @@ if __name__ == "__main__":
         adjoint,
         solver,
         args=None,
-        ode_model_name="double_linear",
+        ode_model_name="double_linear_RK3",
         steps=10000,
     )
 
