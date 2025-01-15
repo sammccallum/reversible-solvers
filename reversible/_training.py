@@ -63,16 +63,19 @@ def train(
     toc = time.time()
     print(f"Compilation time: {toc - tic}")
 
+    best_loss = 100
     tic = time.time()
     for step in range(steps):
         loss, vf, opt_state = make_step(vf, optim, opt_state)
         if step % 100 == 0 or step == steps - 1:
             print(f"Step: {step}, Loss: {loss}")
+        if loss < best_loss:
+            best_loss = loss
     toc = time.time()
 
     data_file = f"data/{ode_model_name}.txt"
     with open(data_file, "a") as file:
-        print(f"{adjoint}, runtime: {toc - tic}, loss: {loss:.8f}", file=file)
+        print(f"{adjoint}, runtime: {toc - tic}, loss: {best_loss:.8f}", file=file)
 
     ts, ys_pred = solve(vf, y0, t1, dt0, solver, adjoint, args)
     return ts, ys_pred

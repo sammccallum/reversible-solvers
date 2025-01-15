@@ -1,0 +1,17 @@
+ReversibleAdjoint(l=0.999), runtime: 804.812979221344, loss: 0.00164877
+RecursiveCheckpointAdjoint(checkpoints=31), runtime: 2059.7236993312836, loss: 0.00137442
+RecursiveCheckpointAdjoint(checkpoints=16), runtime: 3145.239983320236, loss: 0.00137442
+RecursiveCheckpointAdjoint(checkpoints=8), runtime: 3591.1014316082, loss: 0.00137442
+RecursiveCheckpointAdjoint(checkpoints=4), runtime: 5891.930479288101, loss: 0.00137442
+RecursiveCheckpointAdjoint(checkpoints=2), runtime: 38108.28858232498, loss: 0.00137442
+ReversibleAdjoint(l=0.999), runtime: 762.8431761264801, loss: 0.00119780
+RecursiveCheckpointAdjoint(checkpoints=31), runtime: 1700.5584347248077, loss: 0.00119369
+RecursiveCheckpointAdjoint(checkpoints=16), runtime: 2755.1799960136414, loss: 0.00119369
+RecursiveCheckpointAdjoint(checkpoints=8), runtime: 3362.997453689575, loss: 0.00119369
+RecursiveCheckpointAdjoint(checkpoints=4), runtime: 5623.8992331027985, loss: 0.00119369
+RecursiveCheckpointAdjoint(checkpoints=2), runtime: 39104.725088357925, loss: 0.00119369
+ReversibleAdjoint(l=0.999), runtime: 806.3958923816681, loss: 0.00153635
+RecursiveCheckpointAdjoint(checkpoints=31), runtime: 1775.490024805069, loss: 0.00113324
+RecursiveCheckpointAdjoint(checkpoints=16), runtime: 2856.2798993587494, loss: 0.00113324
+RecursiveCheckpointAdjoint(checkpoints=8), runtime: 3396.925651073456, loss: 0.00113324
+RecursiveCheckpointAdjoint(checkpoints=4), runtime: 5713.670644760132, loss: 0.00113324
