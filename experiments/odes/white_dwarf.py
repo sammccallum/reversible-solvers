@@ -38,7 +38,7 @@ if __name__ == "__main__":
     y0 = jnp.array([1.0, 0.0])
     t1 = 5
     dt0 = 0.005
-    solver = dfx.RK4Simple()
+    solver = dfx.RK3Simple()
     ts, data = solve(white_dwarf, y0, t1, dt0, solver, adjoint, args)
 
     ts, ys = train(
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         adjoint,
         solver,
         args=args,
-        ode_model_name="white_dwarf_euler",
+        ode_model_name="white_dwarf_Ralston3",
         steps=1000,
     )
     plot_whitedwarf(ts, ys)
