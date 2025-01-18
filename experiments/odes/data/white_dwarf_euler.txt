@@ -33,3 +33,4 @@ RecursiveCheckpointAdjoint(checkpoints=8), runtime: 516.9050896167755, loss: 0.0
 RecursiveCheckpointAdjoint(checkpoints=16), runtime: 422.8319809436798, loss: 0.00012288
 RecursiveCheckpointAdjoint(checkpoints=32), runtime: 383.4509015083313, loss: 0.00012288
 RecursiveCheckpointAdjoint(checkpoints=44), runtime: 246.935533285141, loss: 0.00012288
+ReversibleAdjoint(l=0.999), runtime: 102.61507654190063, loss: 0.00006443

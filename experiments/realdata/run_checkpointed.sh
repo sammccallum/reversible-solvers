@@ -1,7 +1,7 @@
 #!/bin/bash
 
 checkpoints=(31 16 8 4 2)
-for repeat in {3..5}
+for repeat in {5..6}
 do
     echo "Repeat $repeat"
     python3 main.py --adjoint reversible --checkpoints "1" --key "$repeat"
