@@ -76,7 +76,7 @@ if __name__ == "__main__":
     y0 = xs[0]
     t1 = ts[-1]
     dt0 = ts[1] - ts[0]
-    solver = dfx.MidpointSimple()
+    solver = dfx.Euler()
 
     ts, ys_pred = train(
         vf,
@@ -87,7 +87,7 @@ if __name__ == "__main__":
         adjoint,
         solver,
         args=None,
-        ode_model_name="double_linear_midpoint",
+        ode_model_name="double_linear_euler",
         steps=10000,
     )
 
