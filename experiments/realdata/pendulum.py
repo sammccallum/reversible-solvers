@@ -66,13 +66,13 @@ def solve(vf, y0, t1, dt0, solver, adjoint, args, stepsize_controller):
         args=args,
         saveat=saveat,
         adjoint=adjoint,
-        max_steps=500,
+        max_steps=1000,
         stepsize_controller=stepsize_controller,
     )
     ts = sol.ts
     ys = sol.ys
-
-    return ts, ys
+    num_steps = sol.stats["num_accepted_steps"]
+    return ts, ys, num_steps
 
 
 def train(
@@ -91,9 +91,11 @@ def train(
     lr=1e-2,
     weight_decay=1e-5,
 ):
-    @eqx.filter_value_and_grad
+    @eqx.filter_value_and_grad(has_aux=True)
     def grad_loss(vf):
-        ts, ys = solve(vf, y0, t1, dt0, solver, adjoint, args, stepsize_controller)
+        ts, ys, num_steps = solve(
+            vf, y0, t1, dt0, solver, adjoint, args, stepsize_controller
+        )
         # slighty weird hack to manage the jnp.inf padded ts, ys arrays from diffrax
         # we set the inf ts to 10 and the inf ys to 1 which is well beyond our data range
         # so this has no impact on linear interpolation
@@ -101,38 +103,44 @@ def train(
         ys = jnp.where(jnp.isfinite(ys), ys, jnp.zeros_like(ys))
         interp_fn = dfx.LinearInterpolation(ts, ys)
         ys = eqx.filter_vmap(interp_fn.evaluate)(ts_grid)
-        return jnp.mean((ys_data - ys) ** 2)
+        return jnp.mean((ys_data - ys) ** 2), num_steps
 
     @eqx.filter_jit
     def make_step(vf, optim, opt_state):
-        loss, grads = grad_loss(vf)
+        (loss, num_steps), grads = grad_loss(vf)
         updates, opt_state = optim.update(grads, opt_state, vf)
         vf = eqx.apply_updates(vf, updates)
-        return loss, vf, opt_state
+        return loss, vf, opt_state, num_steps
 
     optim = optax.adamw(lr, weight_decay=weight_decay)
     opt_state = optim.init(eqx.filter(vf, eqx.is_inexact_array))
 
     tic = time.time()
-    loss, vf, opt_state = make_step(vf, optim, opt_state)
+    loss, vf, opt_state, num_steps = make_step(vf, optim, opt_state)
     toc = time.time()
     print(f"Compilation time: {toc - tic}")
 
     best_loss = 100
+    total_steps = 0
     tic = time.time()
     for step in range(steps):
-        loss, vf, opt_state = make_step(vf, optim, opt_state)
+        loss, vf, opt_state, num_steps = make_step(vf, optim, opt_state)
         if step % 100 == 0 or step == steps - 1:
             print(f"Step: {step}, Loss: {loss}")
         if loss < best_loss:
             best_loss = loss
+        total_steps += num_steps
     toc = time.time()
 
+    mean_steps = total_steps / steps
     data_file = f"data/{ode_model_name}.txt"
     with open(data_file, "a") as file:
-        print(f"{adjoint}, runtime: {toc - tic}, loss: {best_loss:.8f}", file=file)
+        print(
+            f"{adjoint}, runtime: {toc - tic}, loss: {best_loss:.8f}, mean steps: {mean_steps:.5f}",
+            file=file,
+        )
 
-    ts, ys_pred = solve(
+    ts, ys_pred, _ = solve(
         vf,
         y0,
         t1,
@@ -171,8 +179,8 @@ if __name__ == "__main__":
     y0 = xs[0]
     t1 = ts[-1]
     dt0 = ts[1] - ts[0]
-    solver = dfx.Dopri5()
-    stepsize_controller = dfx.PIDController(rtol=1e-8, atol=1e-8)
+    solver = dfx.Bosh3Simple()
+    stepsize_controller = dfx.PIDController(rtol=1e-6, atol=1e-6)
 
     ts, ys_pred = train(
         vf,
@@ -185,7 +193,7 @@ if __name__ == "__main__":
         solver,
         stepsize_controller,
         args=None,
-        ode_model_name="double_pend",
+        ode_model_name="double_pend_bosh3",
         steps=10000,
     )
 

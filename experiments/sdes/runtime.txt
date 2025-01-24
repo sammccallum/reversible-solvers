@@ -1,4 +1,0 @@
-ReversibleAdjoint(l=0.999), runtime: 30736.906799077988
-RecursiveCheckpointAdjoint(checkpoints=None), runtime: 26307.89017009735
-RecursiveCheckpointAdjoint(checkpoints=None), runtime: 32595.407554626465
-ReversibleAdjoint(l=0.999), runtime: 37736.080064058304

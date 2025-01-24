@@ -79,7 +79,7 @@ if __name__ == "__main__":
         runtimes_rec[idx] = mean_rec
         runtimes_rev[idx] = mean_rev
 
-    fig, ax = plt.subplots(1, 1, figsize=(8, 5))
+    fig, ax = plt.subplots(1, 1, figsize=(6, 5))
     ax.plot(
         steps, runtimes_rev, color="black", marker="D", markersize=5, linestyle="--"
     )
@@ -113,4 +113,4 @@ if __name__ == "__main__":
     ax.spines["right"].set_visible(False)
     plt.tight_layout()
     plt.grid(True)
-    plt.savefig("plot_new.png", dpi=300)
+    plt.savefig("complexity.pdf", format="pdf", bbox_inches="tight")

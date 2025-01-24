@@ -1,3 +1,0 @@
-adjoint=RecursiveCheckpointAdjoint(checkpoints=None), time=36126.78
-adjoint=ReversibleAdjoint(l=0.999), time=43325.16
-RecursiveCheckpointAdjoint(checkpoints=2), runtime: 834924.6513757706
