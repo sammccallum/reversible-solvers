@@ -13,6 +13,7 @@ def load_data(file_path):
         adjoint_match = re.search(r"ReversibleAdjoint\(l=.*?\)", line)
         runtime_match = re.search(r"runtime: ([\d.]+)", line)
         loss_match = re.search(r"loss: ([\d.]+)", line)
+        steps_match = re.search(r"mean steps: ([\d.]+)", line)
 
         if adjoint_match:
             checkpoints = -1
@@ -21,10 +22,16 @@ def load_data(file_path):
 
         runtime = float(runtime_match.group(1)) / 60 if runtime_match else None
         loss = float(loss_match.group(1)) * 1000 if loss_match else None
+        steps = float(steps_match.group(1)) if steps_match else None
 
-        data_parsed.append((checkpoints, runtime, loss))
+        data_parsed.append((checkpoints, runtime, loss, steps))
 
-    dtype = [("checkpoints", int), ("runtime", float), ("loss", float)]
+    dtype = [
+        ("checkpoints", int),
+        ("runtime", float),
+        ("loss", float),
+        ("steps", float),
+    ]
     data_np = np.array(data_parsed, dtype=dtype)
 
     return data_np
@@ -43,8 +50,20 @@ def calculate_mean_std(data_np):
         std_runtime = np.std(filtered_data["runtime"])
         mean_loss = np.mean(filtered_data["loss"])
         std_loss = np.std(filtered_data["loss"])
+        mean_steps = np.mean(filtered_data["steps"])
+        std_steps = np.std(filtered_data["steps"])
 
-        results.append((checkpoint, mean_runtime, std_runtime, mean_loss, std_loss))
+        results.append(
+            (
+                checkpoint,
+                mean_runtime,
+                std_runtime,
+                mean_loss,
+                std_loss,
+                mean_steps,
+                std_steps,
+            )
+        )
 
     results_dtype = [
         ("checkpoints", int),
@@ -52,6 +71,8 @@ def calculate_mean_std(data_np):
         ("std_runtime", float),
         ("mean_loss", float),
         ("std_loss", float),
+        ("mean_steps", float),
+        ("std_steps", float),
     ]
     results_np = np.array(results, dtype=results_dtype)
 
@@ -59,10 +80,6 @@ def calculate_mean_std(data_np):
 
 
 def format_latex_table(paths, loss=False):
-    if loss:
-        idx = 3
-    else:
-        idx = 1
     datas = [load_data(path) for path in paths]
     results = [calculate_mean_std(data) for data in datas]
     latex_table = ""
@@ -70,7 +87,7 @@ def format_latex_table(paths, loss=False):
     for i in range(len(results[0])):
         latex_table += f" & ${results[0][i][0]}$ &" + " & ".join(
             [
-                f" ${result[i][idx]:.2f} \pm {result[i][idx + 1]:.2f}$"
+                f"  ${result[i][1]:.1f} \pm {result[i][2]:.1f}$ & ${result[i][3]:.1f} \pm {result[i][4]:.1f}$ & ${result[i][5]:.0f} \pm {result[i][6]:.0f}$"
                 for result in results
             ]
         )
@@ -78,12 +95,8 @@ def format_latex_table(paths, loss=False):
     return latex_table
 
 
-#   ${result[i][3]:.2f} \pm {result[i][4]:.2f}$ &
-
 if __name__ == "__main__":
-    base_path = "double_pend.txt"
-    # add_paths = ["midpoint.txt", "RK3.txt", "RK4.txt"]
-    # paths = [base_path + path for path in add_paths]
+    base_path = "double_pend_bosh3.txt"
     paths = [base_path]
     latex_table_str = format_latex_table(paths, loss=False)
     print(latex_table_str)
