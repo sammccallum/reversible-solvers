@@ -36,7 +36,7 @@ The base solver `diffrax.Tsit5()` will be automatically wrapped into a reversibl
 ## Experiments
 The experiments presented in the paper can be found in the `experiments` directory. The experiments require an installation of the `reversible` and `diffrax` libraries. To install, run
 ```bash
-git clone https://github.com/sammccallum/reversible-ICML.git
+git clone https://github.com/sammccallum/reversible-solvers.git
 pip install -e reversible
 
 git clone https://github.com/sammccallum/diffrax.git
