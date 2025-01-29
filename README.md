@@ -1,6 +1,6 @@
 # Efficient, Accurate and Stable Gradients for Neural ODEs
 
-This repository contains the JAX implementation of the reversible solver method introduced [here](https://arxiv.org/abs/2410.11648).
+This repository contains a JAX implementation of the reversible solver method introduced [here](https://arxiv.org/abs/2410.11648).
 
 ## Diffrax
 The reversible method is implemented in [diffrax](https://github.com/patrick-kidger/diffrax). This is a work in progress - see the fork [here](https://github.com/sammccallum/diffrax). To install and checkout to the arxiv branch, run
