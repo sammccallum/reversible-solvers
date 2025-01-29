@@ -3,12 +3,12 @@
 This repository accompanies the Reversible Solver method introduced [here](https://arxiv.org/abs/2410.11648).
 
 ## Diffrax
-The reversible method is implemented in [diffrax](https://github.com/patrick-kidger/diffrax). This is a work in progress - see the fork [here](https://github.com/sammccallum/diffrax). To install and checkout to the reversible branch, run
+The reversible method is implemented in [diffrax](https://github.com/patrick-kidger/diffrax). This is a work in progress - see the fork [here](https://github.com/sammccallum/diffrax). To install and checkout to the arxiv branch, run
 ```bash
 git clone https://github.com/sammccallum/diffrax.git
 pip install -e diffrax
 cd diffrax/
-git checkout reversible 
+git checkout arxiv
 ```
 
 ### Example
