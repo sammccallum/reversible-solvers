@@ -4,6 +4,7 @@ authors = [
     {name = "Sam McCallum", email = "sm2942@bath.ac.uk"}
 ]
 version = "0.0.1"
+dependencies = ["optax>=0.2", "matplotlib>=3.0"]
 
 [build-system]
 requires = ["hatchling"]
