@@ -1,0 +1,29 @@
+[project]
+name = "reversible-solvers-timeseries"
+version = "0.0.1"
+requires-python = ">=3.11"
+dependencies = [
+    "diffrax",
+    "equinox>=0.13.6",
+    "jax[cuda12]>=0.9.1",
+    "librosa>=0.11.0",
+    "matplotlib>=3.10.8",
+    "optax>=0.2.7",
+    "scikit-learn>=1.4",
+    "signax>=0.2.1",
+    "tqdm>=4.67.3",
+    "wandb>=0.25.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = ["reversible_solvers_timeseries/*"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[tool.uv.sources]
+diffrax = { git = "https://github.com/sammccallum/diffrax.git", rev = "checkpointing" }

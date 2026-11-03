@@ -1,0 +1,17 @@
+[project]
+name = "reversible"
+authors = [
+    {name = "Sam McCallum", email = "sm2942@bath.ac.uk"}
+]
+version = "0.0.1"
+dependencies = ["optax>=0.2", "matplotlib>=3.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = ["reversible/*"]
+
+[tool.ruff.isort]
+combine-as-imports = true
